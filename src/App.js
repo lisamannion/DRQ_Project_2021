@@ -7,6 +7,8 @@ import { Content } from './components/content';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav } from 'react-bootstrap';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Read } from './components/read';
+import { Create } from './components/create';
 
 // App's class itself
 class App extends Component {
@@ -30,8 +32,8 @@ class App extends Component {
           {/* Tab on the navbar are routed to different components using Switch eg. Home tab on the navbar is showing the Content component */}
           <Switch>
             <Route path='/' component={Content} exact />
-            <Route path='/read' component={Footer} exact />
-            <Route path='/create' component={Header} exact />
+            <Route path='/read' component={Read} exact />
+            <Route path='/create' component={Create} exact />
           </Switch>
         </div>
       </Router>
