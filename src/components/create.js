@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios'; // Talks HTTP on the web
 
 // Create component class
 export class Create extends React.Component {
@@ -27,6 +28,22 @@ export class Create extends React.Component {
             Year: '',
             Poster: ''
         })
+
+        // Object (data) to pass up to the server
+        const newMovie = {
+            title: this.state.Title,
+            year: this.state.Year,
+            poster: this.state.Poster
+        }
+
+        // Post request to the Server - talking HTTP
+        axios.post('http://localhost:4000/api/movies', newMovie)
+            .then((res) => { // If successful
+                console.log(res)
+            })
+            .catch((err) => { // In case of an error
+                console.log(err)
+            });
     }
 
     // Sets the movie name 

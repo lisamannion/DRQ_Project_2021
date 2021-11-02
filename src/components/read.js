@@ -11,8 +11,8 @@ export class Read extends React.Component {
 
     // LIFECYCLE HOOK - Triggered everytime read component is active on the view
     componentDidMount() {
-        // HTTP get call - Get the data from the API and set it equal to state
-        axios.get('https://jsonblob.com/api/jsonblob/894944504570986496')
+        // HTTP get call - Get the data from the API (server.js) and set it equal to state
+        axios.get('http://localhost:4000/api/movies')
             .then((response) => { // If successful - assign it to state
                 this.setState({ movies: response.data.movies })
             })
