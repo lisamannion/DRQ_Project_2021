@@ -19,7 +19,7 @@ export class Create extends React.Component {
 
     // When the form is submitted
     handleSubmit(event) {
-        alert("Movie Name: " + this.state.Title + "\nYear: " + this.state.Year + "\nPoster: " + this.state.Title);
+        alert("Movie Name: " + this.state.Title + "\nYear: " + this.state.Year + "\nPoster: " + this.state.Poster);
         event.preventDefault(); // prevents crashes
 
         // Setting the input fields back to empty once the entered data has been submitted
