@@ -16,6 +16,7 @@ app.use(bodyParser.json())
 // Including cors (Cross Origin Resource Sharing - for Security)
 const cors = require('cors')
 
+// Using cors
 app.use(cors())
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
@@ -104,6 +105,19 @@ app.get('/api/movies/:id', (req, res) => {
     })
 })
 
+// Updating movie with a particular ID
+app.put('/api/movies/:id', (req, res) => {
+    console.log("Update movie: " + req.params.id)
+    console.log(req.body)
+
+    // Makes an asynchronous call to the database, finds, and updates doc with specified id
+    MovieModel.findByIdAndUpdate(req.params.id, req.body, {new:true}, 
+        (err, data) => {
+            res.send(data)
+    })
+})
+
+// Server app listening on port 4000
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
