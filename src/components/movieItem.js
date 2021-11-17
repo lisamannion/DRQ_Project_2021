@@ -22,7 +22,7 @@ export class MovieItem extends React.Component {
                             </footer>
                         </blockquote>
                     </Card.Body>
-                    {/* Changing the link id in the URL to include the _id of the Database document when button is pressed */}
+                    {/* Changing the link to /edit/:id */}
                     <Link to={"/edit/" + this.props.movie._id} className="btn btn-primary">Edit Movie</Link>
                 </Card>
 
