@@ -25,99 +25,82 @@ app.use(function (req, res, next) {
     next()
 })
 
+// Configuration for sending build and static files for deployment
+const path = require('path')
+app.use(express.static(path.join(__dirname, '../build')))
+app.use('/static', express.static(path.join(__dirname, 'build//static')))
+
 // Including Mongoosejs package
 const mongoose = require('mongoose')
 
 // Set up connection string for database
-const connectionString = 'mongodb+srv://admin:0000@cluster0.cbk0q.mongodb.net/movies?retryWrites=true&w=majority'
-mongoose.connect(connectionString, {useNewUrlParser: true})
+const mongoConnection = 'mongodb+srv://admin:0000@cluster0.cbk0q.mongodb.net/stallion?retryWrites=true&w=majority'
+mongoose.connect(mongoConnection, { useNewUrlParser: true })
 
 // Defining the schema for the database
 const Schema = mongoose.Schema
-var movieSchema = new Schema({
-    title: String,
-    year: String,
-    poster: String
+var stallionSchema = new Schema({
+    regName: String,
+    birthYear: String,
+    picture: String
 })
 
 // Use schema to create a model for the database
-var MovieModel = mongoose.model("movie", movieSchema)
+var StallionModel = mongoose.model("stallion", stallionSchema)
 
-// Get movies back from API
-app.get('/api/movies', (req, res) => {
-
-    // const myMovies = [
-    //     {
-    //         "Title": "Avengers: Infinity War",
-    //         "Year": "2018",
-    //         "imdbID": "tt4154756",
-    //         "Type": "movie",
-    //         "Poster": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_SX300.jpg"
-    //     },
-    //     {
-    //         "Title": "Captain America: Civil War",
-    //         "Year": "2016",
-    //         "imdbID": "tt3498820",
-    //         "Type": "movie",
-    //         "Poster": "https://m.media-amazon.com/images/M/MV5BMjQ0MTgyNjAxMV5BMl5BanBnXkFtZTgwNjUzMDkyODE@._V1_SX300.jpg"
-    //     }
-    // ]
-    // Send back some JSON data (hardcoded array above)
-
+// Get stallions back from API
+app.get('/displayStallions', (req, res) => {
     // Send back data from the database
-    MovieModel.find((err, data) => {
-        res.json(data)
+    StallionModel.find((err, data) => {
+        res.status(200).json(data)
     })
-    
-    // res.status(200).json({
-    //     // Can have multiple items (seperated by commas) in here such as:
-    //     message: "Everything is OK",
-    //     movies: myMovies
-    // })
 })
 
 // Listening for a post request
-app.post('/api/movies', (req, res) => {
-    // When data is being passed up, log to server's console (port:4000)
-    console.log("Movie received!")
-    console.log(req.body.title)
-    console.log(req.body.year)
-    console.log(req.body.poster)
-
-    // Write the new movie to the database
-    MovieModel.create({
-        title: req.body.title,
-        year: req.body.year,
-        poster: req.body.poster
+app.post('/newStallion', (req, res) => {
+    // Write the new stallion to the database
+    StallionModel.create({
+        regName: req.body.regName,
+        birthYear: req.body.birthYear,
+        picture: req.body.picture
     })
 
-    // Send a response back to the client to confirm the movie is created
-    res.send("Movie added")
+    // Send a response back to the client to confirm the stallion is created
+    res.status(200).send("Stallion added")
 })
 
-// Listen for a get request and will return movie which has the id specified after /api/movies/:
-app.get('/api/movies/:id', (req, res) => {
-    console.log(req.params.id)
-
-    MovieModel.findById(req.params.id, (err, data) => {
+// Listen for a get request and will return stallion which has the id specified after /update/:id
+app.get('/update/:id', (req, res) => {
+    StallionModel.findById(req.params.id, (err, data) => {
         // Sending back the data
-        res.json(data)
+        res.status(200).json(data)
     })
 })
 
-// Updating movie with a particular ID
-app.put('/api/movies/:id', (req, res) => {
-    console.log("Update movie: " + req.params.id)
-    console.log(req.body)
-
+// Updating stallion with a particular ID
+app.put('/update/:id', (req, res) => {
     // Makes an asynchronous call to the database, finds, and updates doc with specified id
-    MovieModel.findByIdAndUpdate(req.params.id, req.body, {new:true}, 
+    StallionModel.findByIdAndUpdate(req.params.id, req.body, { new: true },
+        (err, data) => {
+            res.status(200).send(data)
+        })
+})
+
+// Deleting a stallion with id passed by URL
+app.delete('/delete/:id', (req, res) => {
+    // Makes an asynchronous call to the database, finds, and updates doc with specified id
+    StallionModel.findByIdAndDelete(req.params.id, { new: true },
         (err, data) => {
             res.send(data)
-    })
+        })
+})
+
+// Get on any other route and send the index.html file back
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../build/index.html'))
 })
 
 // Server app listening on port 4000
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log('Listening at http://localhost:4000')
 })
